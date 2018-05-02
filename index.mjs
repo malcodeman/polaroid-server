@@ -4,7 +4,7 @@ import cors from "cors";
 
 import posts_routes from "./routes/posts_routes.mjs";
 
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || 9001;
 const app = express();
 
 app.use(cors());
@@ -14,7 +14,7 @@ app.use(
   })
 );
 app.use(express.json());
-app.use("/", posts_routes);
+app.use("/api/v1/posts", posts_routes);
 
 mongoose.connect("mongodb://localhost/test");
 app.listen(PORT, () => console.log(`Running on port ${PORT}`));
