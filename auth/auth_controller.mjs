@@ -19,3 +19,23 @@ export const create = (req, res) => {
     })
     .catch(error => res.status(400).send(error));
 };
+
+export const login = (req, res) => {
+  sequelize
+    .sync()
+    .then(() =>
+      User.findOne({
+        where: { email: req.body.email }
+      })
+    )
+    .then(user => {
+      const password = req.body.password;
+      if (password === user.password) {
+        const token = jwt.sign({ id: user.id }, "secret", {
+          expiresIn: 86400
+        });
+        res.status(200).send(token);
+      }
+    })
+    .catch(error => res.status(400).send(error));
+};
