@@ -1,12 +1,8 @@
-import jwt from "jsonwebtoken";
-
 import Post from "./posts_model.mjs";
 
 export async function create(req, res, next) {
   try {
-    const token = req.headers.authorization;
-    const decoded = jwt.verify(token, "secret");
-    const post = await Post.create({ text: req.body.text, userId: decoded.id });
+    const post = await Post.create({ text: req.body.text, userId: req.userId });
     res.status(200).send(post);
   } catch (error) {
     res.status(400).send(error);
@@ -15,9 +11,7 @@ export async function create(req, res, next) {
 
 export async function get(req, res, next) {
   try {
-    const token = req.headers.authorization;
-    const decoded = jwt.verify(token, "secret");
-    const posts = await Post.findAll({ where: { userId: decoded.id } });
+    const posts = await Post.findAll({ where: { userId: req.userId } });
     res.status(200).send(posts);
   } catch (error) {
     res.status(400).send(error);
