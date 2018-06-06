@@ -1,12 +1,17 @@
 import User from "../users/users_model.mjs";
 
-export async function findById(req, res, next) {
+export async function findByUsername(req, res, next) {
   try {
-    const { id } = req.params;
-    const user = await User.findAll({
-      where: { id }
+    const { username } = req.params;
+    const user = await User.findOne({
+      where: {
+        username
+      },
+      attributes: {
+        exclude: ["email", "password"]
+      }
     });
-    res.status(200).send(user[0]);
+    res.status(200).send(user);
   } catch (error) {
     res.status(400).send(error);
   }
