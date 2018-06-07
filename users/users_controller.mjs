@@ -1,4 +1,5 @@
 import User from "../users/users_model.mjs";
+import Post from "../posts/posts_model.mjs";
 
 export async function findByUsername(req, res, next) {
   try {
@@ -9,7 +10,12 @@ export async function findByUsername(req, res, next) {
       },
       attributes: {
         exclude: ["email", "password"]
-      }
+      },
+      include: [
+        {
+          model: Post
+        }
+      ]
     });
     res.status(200).send(user);
   } catch (error) {
