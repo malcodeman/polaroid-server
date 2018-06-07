@@ -15,7 +15,8 @@ export async function findByUsername(req, res, next) {
         {
           model: Post
         }
-      ]
+      ],
+      order: [[Post, "createdAt", "DESC"]]
     });
     res.status(200).send(user);
   } catch (error) {
