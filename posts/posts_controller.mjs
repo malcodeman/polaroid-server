@@ -3,7 +3,8 @@ import User from "../users/users_model.mjs";
 
 export async function create(req, res, next) {
   try {
-    const post = await Post.create({ text: req.body.text, userId: req.userId });
+    const { photoURL } = req.body;
+    const post = await Post.create({ photoURL, userId: req.userId });
     res.status(200).send(post);
   } catch (error) {
     res.status(400).send(error);

@@ -2,8 +2,8 @@ import sequelize from "../connection.mjs";
 import Sequelize from "sequelize";
 
 const Post = sequelize.define("post", {
-  text: {
-    type: Sequelize.TEXT,
+  photoURL: {
+    type: Sequelize.STRING,
     allowNull: false,
     validate: {
       notEmpty: true
