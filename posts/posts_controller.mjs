@@ -1,4 +1,5 @@
 import Post from "./posts_model.mjs";
+import User from "../users/users_model.mjs";
 
 export async function create(req, res, next) {
   try {
@@ -9,9 +10,17 @@ export async function create(req, res, next) {
   }
 }
 
-export async function get(req, res, next) {
+export async function findAll(req, res, next) {
   try {
-    const posts = await Post.findAll({ where: { userId: req.userId } });
+    const posts = await Post.findAll({
+      order: [["id", "DESC"]],
+      include: [
+        {
+          model: User,
+          attributes: ["username"]
+        }
+      ]
+    });
     res.status(200).send(posts);
   } catch (error) {
     res.status(400).send(error);

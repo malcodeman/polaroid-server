@@ -1,5 +1,7 @@
-import sequelize from "../connection.mjs";
 import Sequelize from "sequelize";
+
+import sequelize from "../connection.mjs";
+import Post from "../posts/posts_model.mjs";
 
 const User = sequelize.define("user", {
   email: {
@@ -40,5 +42,8 @@ const User = sequelize.define("user", {
     }
   }
 });
+
+User.hasMany(Post);
+Post.belongsTo(User);
 
 export default User;
