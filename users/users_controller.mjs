@@ -40,7 +40,13 @@ export async function findMe(req, res, next) {
       where: { id },
       attributes: {
         exclude: ["password"]
-      }
+      },
+      include: [
+        {
+          model: Post
+        }
+      ],
+      order: [[Post, "createdAt", "DESC"]]
     });
     res.status(200).send(me[0]);
   } catch (error) {
