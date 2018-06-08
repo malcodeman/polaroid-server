@@ -18,6 +18,9 @@ export async function findByUsername(req, res, next) {
       ],
       order: [[Post, "createdAt", "DESC"]]
     });
+    if (user === null) {
+      res.status(404).send();
+    }
     res.status(200).send(user);
   } catch (error) {
     res.status(400).send(error);
