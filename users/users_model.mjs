@@ -40,6 +40,10 @@ const User = sequelize.define("user", {
     validate: {
       notEmpty: true
     }
+  },
+  profilePhotoURL: {
+    type: Sequelize.STRING,
+    defaultValue: null
   }
 });
 

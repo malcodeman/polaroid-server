@@ -1,6 +1,22 @@
 import User from "../users/users_model.mjs";
 import Post from "../posts/posts_model.mjs";
 
+const findById = async id => {
+  const me = await User.findOne({
+    where: { id },
+    attributes: {
+      exclude: ["password"]
+    },
+    include: [
+      {
+        model: Post
+      }
+    ],
+    order: [[Post, "createdAt", "DESC"]]
+  });
+  return me;
+};
+
 export async function findByUsername(req, res, next) {
   try {
     const { username } = req.params;
@@ -39,18 +55,19 @@ export async function findAll(req, res, next) {
 export async function findMe(req, res, next) {
   try {
     const id = req.userId;
-    const me = await User.findOne({
-      where: { id },
-      attributes: {
-        exclude: ["password"]
-      },
-      include: [
-        {
-          model: Post
-        }
-      ],
-      order: [[Post, "createdAt", "DESC"]]
-    });
+    const me = await findById(id);
+    res.status(200).send(me);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+}
+
+export async function updateMe(req, res, next) {
+  try {
+    const id = req.userId;
+    const { profilePhotoURL } = req.body;
+    const me = await findById(id);
+    me.update({ profilePhotoURL });
     res.status(200).send(me);
   } catch (error) {
     res.status(400).send(error);
