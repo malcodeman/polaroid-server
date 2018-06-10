@@ -5,21 +5,14 @@ import User from "../users/users_model.mjs";
 
 const Op = Sequelize.Op;
 
-function getInitials(name) {
-  let nameArray = name.split(" ");
-  const firstNameFirstLetter = nameArray[0][0];
-  const lastNameFirstLetter = nameArray[1][0];
-  return firstNameFirstLetter + lastNameFirstLetter;
-}
-
 export async function signup(req, res, next) {
   try {
     const { email, name, username, password } = req.body;
-    const initials = getInitials(name);
+    const nameFirstLetter = name[0];
     const user = await User.create({
       email,
       name,
-      initials,
+      nameFirstLetter,
       username,
       password
     });

@@ -19,7 +19,7 @@ const User = sequelize.define("user", {
       notEmpty: true
     }
   },
-  initials: {
+  nameFirstLetter: {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
