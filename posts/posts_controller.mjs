@@ -18,7 +18,7 @@ export async function findAll(req, res, next) {
       include: [
         {
           model: User,
-          attributes: ["username"]
+          attributes: ["username", "profilePhotoURL", "nameFirstLetter"]
         }
       ]
     });
