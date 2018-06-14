@@ -1,5 +1,7 @@
-import sequelize from "../connection.mjs";
 import Sequelize from "sequelize";
+
+import sequelize from "../connection.mjs";
+import Comment from "../comments/comments_model.mjs";
 
 const Post = sequelize.define("post", {
   photoURL: {
@@ -14,5 +16,8 @@ const Post = sequelize.define("post", {
     allowNull: false
   }
 });
+
+Post.hasMany(Comment);
+Comment.belongsTo(Comment);
 
 export default Post;

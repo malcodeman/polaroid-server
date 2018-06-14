@@ -1,4 +1,5 @@
 import Post from "./posts_model.mjs";
+import Comment from "../comments/comments_model.mjs";
 import User from "../users/users_model.mjs";
 
 export async function create(req, res, next) {
@@ -19,6 +20,16 @@ export async function findAll(req, res, next) {
         {
           model: User,
           attributes: ["username", "profilePhotoURL", "nameFirstLetter"]
+        },
+        {
+          model: Comment,
+          attributes: ["id", "body"],
+          include: [
+            {
+              model: User,
+              attributes: ["id", "username"]
+            }
+          ]
         }
       ]
     });
