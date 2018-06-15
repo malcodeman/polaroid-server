@@ -15,7 +15,7 @@ export async function create(req, res, next) {
 export async function findAll(req, res, next) {
   try {
     const posts = await Post.findAll({
-      order: [["id", "DESC"]],
+      order: [["id", "DESC"], [Comment, "id", "ASC"]],
       include: [
         {
           model: User,
