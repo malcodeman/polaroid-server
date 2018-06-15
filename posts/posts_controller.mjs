@@ -1,6 +1,9 @@
 import Post from "./posts_model.mjs";
 import Comment from "../comments/comments_model.mjs";
 import User from "../users/users_model.mjs";
+import Like from "../likes/likes_model.mjs";
+
+import sequelize from "../connection.mjs";
 
 export async function create(req, res, next) {
   try {
@@ -15,11 +18,22 @@ export async function create(req, res, next) {
 export async function findAll(req, res, next) {
   try {
     const posts = await Post.findAll({
+      attributes: [
+        "id",
+        "createdAt",
+        "photoURL",
+        [sequelize.fn("COUNT", sequelize.col("likes.id")), "likesCount"]
+      ],
       order: [["id", "DESC"], [Comment, "id", "ASC"]],
+      group: ["post.id", "comments.id"],
       include: [
         {
           model: User,
           attributes: ["username", "profilePhotoURL", "nameFirstLetter"]
+        },
+        {
+          model: Like,
+          attributes: []
         },
         {
           model: Comment,
