@@ -2,6 +2,7 @@ import Post from "./posts_model.mjs";
 import Comment from "../comments/comments_model.mjs";
 import User from "../users/users_model.mjs";
 import Like from "../likes/likes_model.mjs";
+import Bookmark from "../bookmarks/bookmarks_model.mjs";
 
 import sequelize from "../connection.mjs";
 
@@ -61,8 +62,23 @@ export async function findAll(req, res, next) {
         return false;
       }
     }
+    async function bookmarked(postId) {
+      const bookmark = await Bookmark.findOne({
+        attributes: ["id"],
+        where: {
+          postId,
+          userId: req.userId
+        }
+      });
+      if (bookmark) {
+        return Object({ bookmarkId: bookmark.dataValues.id });
+      } else {
+        return false;
+      }
+    }
     for (let i = 0; i < posts.length; ++i) {
       posts[i].dataValues.liked = await liked(posts[i].dataValues.id);
+      posts[i].dataValues.bookmarked = await bookmarked(posts[i].dataValues.id);
     }
     res.status(200).send(posts);
   } catch (error) {
