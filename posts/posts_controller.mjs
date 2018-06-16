@@ -17,7 +17,7 @@ export async function create(req, res, next) {
 
 export async function findAll(req, res, next) {
   try {
-    const posts = await Post.findAll({
+    let posts = await Post.findAll({
       attributes: [
         "id",
         "createdAt",
@@ -47,6 +47,21 @@ export async function findAll(req, res, next) {
         }
       ]
     });
+    async function liked(postId) {
+      return Boolean(
+        Number(
+          await Like.count({
+            where: {
+              postId,
+              userId: req.userId
+            }
+          })
+        )
+      );
+    }
+    for (let i = 0; i < posts.length; ++i) {
+      posts[i].dataValues.liked = await liked(posts[i].dataValues.id);
+    }
     res.status(200).send(posts);
   } catch (error) {
     res.status(400).send(error);
