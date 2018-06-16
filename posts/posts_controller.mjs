@@ -48,16 +48,18 @@ export async function findAll(req, res, next) {
       ]
     });
     async function liked(postId) {
-      return Boolean(
-        Number(
-          await Like.count({
-            where: {
-              postId,
-              userId: req.userId
-            }
-          })
-        )
-      );
+      const like = await Like.findOne({
+        attributes: ["id"],
+        where: {
+          postId,
+          userId: req.userId
+        }
+      });
+      if (like) {
+        return Object({ likeId: like.dataValues.id });
+      } else {
+        return false;
+      }
     }
     for (let i = 0; i < posts.length; ++i) {
       posts[i].dataValues.liked = await liked(posts[i].dataValues.id);
