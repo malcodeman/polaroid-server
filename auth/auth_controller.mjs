@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import Sequelize from "sequelize";
+import argon2 from "argon2";
 
 import User from "../users/users_model.mjs";
 
@@ -8,6 +9,8 @@ const Op = Sequelize.Op;
 export async function signup(req, res, next) {
   try {
     const { email, name, username, password } = req.body;
+    const hash = await argon2.hash(password);
+    console.log(hash);
     const nameFirstLetter = name[0];
     const user = await User.create({
       email,
