@@ -1,5 +1,6 @@
 import User from "../users/users_model.mjs";
 import Post from "../posts/posts_model.mjs";
+import Bookmark from "../bookmarks/bookmarks_model.mjs";
 
 const findById = async id => {
   const me = await User.findOne({
@@ -10,6 +11,14 @@ const findById = async id => {
     include: [
       {
         model: Post
+      },
+      {
+        model: Bookmark,
+        include: [
+          {
+            model: Post
+          }
+        ]
       }
     ],
     order: [[Post, "createdAt", "DESC"]]
