@@ -10,6 +10,19 @@ export async function create(req, res, next) {
   try {
     const { photoURL } = req.body;
     const post = await Post.create({ photoURL, userId: req.userId });
+    const id = req.userId;
+    const me = await User.findOne({
+      where: { id },
+      attributes: ["username", "nameFirstLetter", "profilePhotoURL"]
+    });
+    post.dataValues.user = {
+      username: me.dataValues.username,
+      nameFirstLetter: me.dataValues.nameFirstLetter,
+      profilePhotoURL: me.dataValues.profilePhotoURL
+    };
+    post.dataValues.comments = [];
+    post.dataValues.likesCount = 0;
+    post.dataValues.liked = false;
     res.status(200).send(post);
   } catch (error) {
     res.status(400).send(error);
