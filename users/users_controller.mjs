@@ -74,9 +74,15 @@ export async function findMe(req, res, next) {
 export async function updateMe(req, res, next) {
   try {
     const id = req.userId;
-    const { profilePhotoURL } = req.body;
+    const fields = ["email", "name", "username", "profilePhotoURL"];
+    let dataToUpdate = {};
+    fields.forEach(field => {
+      if (req.body.hasOwnProperty(field)) {
+        dataToUpdate[field] = req.body[field];
+      }
+    });
     const me = await findById(id);
-    me.update({ profilePhotoURL });
+    me.update(dataToUpdate, { fields });
     res.status(200).send(me);
   } catch (error) {
     res.status(400).send(error);
