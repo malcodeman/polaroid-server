@@ -1,8 +1,8 @@
 import Sequelize from "sequelize";
 
-const sequelize = new Sequelize("confessio", "root", "toor", {
+const sequelize = new Sequelize("polaroid", "root", "toor", {
   host: "localhost",
-  dialect: "mysql",
+  dialect: "postgres",
   pool: {
     max: 5,
     min: 0,

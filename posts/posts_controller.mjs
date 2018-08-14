@@ -32,22 +32,12 @@ export async function create(req, res, next) {
 export async function findAll(req, res, next) {
   try {
     let posts = await Post.findAll({
-      attributes: [
-        "id",
-        "createdAt",
-        "photoURL",
-        [sequelize.fn("COUNT", sequelize.col("likes.id")), "likesCount"]
-      ],
-      order: [["id", "DESC"], [Comment, "id", "ASC"]],
-      group: ["post.id", "comments.id"],
+      attributes: ["id", "createdAt", "photoURL"],
+      order: [["id", "DESC"]],
       include: [
         {
           model: User,
           attributes: ["username", "profilePhotoURL", "nameFirstLetter"]
-        },
-        {
-          model: Like,
-          attributes: []
         },
         {
           model: Comment,
@@ -71,9 +61,8 @@ export async function findAll(req, res, next) {
       });
       if (like) {
         return Object({ likeId: like.dataValues.id });
-      } else {
-        return false;
       }
+      return false;
     }
     async function bookmarked(postId) {
       const bookmark = await Bookmark.findOne({
@@ -85,13 +74,20 @@ export async function findAll(req, res, next) {
       });
       if (bookmark) {
         return Object({ bookmarkId: bookmark.dataValues.id });
-      } else {
-        return false;
       }
+      return false;
     }
-    for (let i = 0; i < posts.length; ++i) {
-      posts[i].dataValues.liked = await liked(posts[i].dataValues.id);
-      posts[i].dataValues.bookmarked = await bookmarked(posts[i].dataValues.id);
+    async function likesCount(postId) {
+      return await Like.count({
+        where: {
+          postId
+        }
+      });
+    }
+    for (let post of posts) {
+      post.dataValues.liked = await liked(post.dataValues.id);
+      post.dataValues.bookmarked = await bookmarked(post.dataValues.id);
+      post.dataValues.likesCount = await likesCount(post.dataValues.id);
     }
     res.status(200).send(posts);
   } catch (error) {

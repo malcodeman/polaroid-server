@@ -1,1 +1,1 @@
-# confessio-server
+# polaroid-server
