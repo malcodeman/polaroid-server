@@ -1,5 +1,5 @@
-import Comment from "./comments_model.mjs";
-import User from "../users/users_model.mjs";
+import Comment from "./comments_model";
+import User from "../users/users_model";
 
 export async function create(req, res, next) {
   try {

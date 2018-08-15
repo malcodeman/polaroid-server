@@ -1,6 +1,6 @@
-import User from "../users/users_model.mjs";
-import Post from "../posts/posts_model.mjs";
-import Bookmark from "../bookmarks/bookmarks_model.mjs";
+import User from "./users_model";
+import Post from "../posts/posts_model";
+import Bookmark from "../bookmarks/bookmarks_model";
 
 const findById = async id => {
   const me = await User.findOne({

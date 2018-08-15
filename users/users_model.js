@@ -1,10 +1,10 @@
 import Sequelize from "sequelize";
 
-import sequelize from "../connection.mjs";
-import Post from "../posts/posts_model.mjs";
-import Comment from "../comments/comments_model.mjs";
-import Like from "../likes/likes_model.mjs";
-import Bookmark from "../bookmarks/bookmarks_model.mjs";
+import sequelize from "../connection";
+import Post from "../posts/posts_model";
+import Comment from "../comments/comments_model";
+import Like from "../likes/likes_model";
+import Bookmark from "../bookmarks/bookmarks_model";
 
 const User = sequelize.define("user", {
   email: {

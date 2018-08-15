@@ -1,5 +1,5 @@
-import Bookmark from "./bookmarks_model.mjs";
-import Post from "../posts/posts_model.mjs";
+import Bookmark from "./bookmarks_model";
+import Post from "../posts/posts_model";
 
 export async function create(req, res, next) {
   try {

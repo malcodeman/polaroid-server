@@ -1,10 +1,8 @@
-import Post from "./posts_model.mjs";
-import Comment from "../comments/comments_model.mjs";
-import User from "../users/users_model.mjs";
-import Like from "../likes/likes_model.mjs";
-import Bookmark from "../bookmarks/bookmarks_model.mjs";
-
-import sequelize from "../connection.mjs";
+import Post from "./posts_model";
+import Comment from "../comments/comments_model";
+import User from "../users/users_model";
+import Like from "../likes/likes_model";
+import Bookmark from "../bookmarks/bookmarks_model";
 
 export async function create(req, res, next) {
   try {

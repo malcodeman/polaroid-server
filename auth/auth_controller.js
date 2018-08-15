@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import Sequelize from "sequelize";
 import argon2 from "argon2";
 
-import User from "../users/users_model.mjs";
+import User from "../users/users_model";
 
 const Op = Sequelize.Op;
 

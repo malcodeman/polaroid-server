@@ -1,4 +1,4 @@
-import Like from "./likes_model.mjs";
+import Like from "./likes_model";
 
 export async function create(req, res, next) {
   try {

@@ -1,4 +1,4 @@
-import sequelize from "../connection.mjs";
+import sequelize from "../connection";
 
 const Bookmark = sequelize.define("bookmark", {});
 

@@ -1,12 +1,12 @@
 import express from "express";
 import cors from "cors";
 
-import users_routes from "./users/users_routes.mjs";
-import auth_routes from "./auth/auth_routes.mjs";
-import posts_routes from "./posts/posts_routes.mjs";
-import comments_routes from "./comments/comments_routes.mjs";
-import likes_routes from "./likes/likes_routes.mjs";
-import bookmarks_routes from "./bookmarks/bookmarks_routes.mjs";
+import users_routes from "./users/users_routes";
+import auth_routes from "./auth/auth_routes";
+import posts_routes from "./posts/posts_routes";
+import comments_routes from "./comments/comments_routes";
+import likes_routes from "./likes/likes_routes";
+import bookmarks_routes from "./bookmarks/bookmarks_routes";
 
 const PORT = process.env.PORT || 9001;
 const app = express();
