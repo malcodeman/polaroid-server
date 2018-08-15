@@ -3,10 +3,10 @@ node_js:
   - "stable"
 postgres:
   adapter: postgresql
-  database: myapp_polaroid
+  database: travis
   username: postgres
 before_script:
-  - "psql -c 'create database myapp_polaroid;' -U postgres"
+  - "psql -c 'create database travis;' -U postgres"
 script:
   - yarn build
   - yarn serve
