@@ -3,6 +3,9 @@ node_js:
   - "stable"
 services:
   - postgresql
+before_script:
+  - psql -c "CREATE DATABASE $DB_NAME;" -U postgres
+  - psql -c "CREATE USER $DB_USER WITH PASSWORD $DB_PASSWORD;" -U postgres
 script:
   - yarn build
   - yarn serve
