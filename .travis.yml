@@ -9,6 +9,7 @@ before_script:
   - "psql -c 'create database travis;' -U postgres"
 script:
   - yarn build
+  - yarn serve
 deploy:
   provider: heroku
   api_key:
