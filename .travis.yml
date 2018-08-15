@@ -1,11 +1,12 @@
 language: node_js
 node_js:
   - "stable"
-services:
-  - postgresql
+postgres:
+  adapter: postgresql
+  database: myapp_polaroid
+  username: postgres
 before_script:
-  - psql -c "CREATE DATABASE $DB_NAME;" -U postgres
-  - psql -c "CREATE USER $DB_USER WITH PASSWORD $DB_PASSWORD;" -U postgres
+  - "psql -c 'create database myapp_polaroid;' -U postgres"
 script:
   - yarn build
   - yarn serve
