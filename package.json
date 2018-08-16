@@ -31,5 +31,9 @@
     "jsonwebtoken": "^8.2.1",
     "pg": "^7.4.3",
     "sequelize": "^4.37.7"
+  },
+  "engines": {
+    "node": "8.11.1",
+    "yarn": "1.7.0"
   }
 }
