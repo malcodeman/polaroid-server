@@ -1,8 +1,8 @@
 import Sequelize from "sequelize";
 
-const { DATABASE_URL } = process.env;
+const { DB_URL } = process.env;
 
-const sequelize = new Sequelize(DATABASE_URL, {
+const sequelize = new Sequelize(DB_URL, {
   pool: {
     max: 5,
     min: 0,
