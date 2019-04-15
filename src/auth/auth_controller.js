@@ -1,69 +1,56 @@
 import jwt from "jsonwebtoken";
-import Sequelize from "sequelize";
-import argon2 from "argon2";
+import argon from "argon2";
 
-import User from "../users/users_model";
-
-const Op = Sequelize.Op;
+import { create, findOnLogin, findMe } from "../users/users_helpers";
 
 export async function signup(req, res, next) {
   try {
     const { email, name, username, password } = req.body;
-    const hash = await argon2.hash(password);
-    console.log(hash);
-    const nameFirstLetter = name[0];
-    const user = await User.create({
-      email,
-      name,
-      nameFirstLetter,
-      username,
-      password
-    });
+    const hash = await argon.hash(password);
+    const user = await create(email, name, username, hash);
     const token = jwt.sign({ id: user.id }, "secret", {
       expiresIn: 86400
     });
-    const newUser = await User.findOne({
-      where: {
-        id: user.dataValues.id
-      },
-      attributes: {
-        exclude: ["password"]
-      }
-    });
-    res.status(200).send({ token, user: newUser });
+    const me = await findMe(user.id);
+
+    res.status(200).send({ token, user: me });
   } catch (error) {
-    res.status(400).send(error);
+    if (error.errors) {
+      const notUnique = error.errors.find(error => {
+        return error.validatorKey === "not_unique";
+      });
+
+      if (notUnique.path === "email") {
+        res.status(400).send({ exception: "EmailExistsException" });
+      } else if (notUnique.path === "username") {
+        res.status(400).send({ exception: "UsernameExistsException" });
+      }
+      return;
+    }
+    res.status(400).send({ exception: "general", error });
   }
 }
 
 export async function login(req, res, next) {
   try {
     const { username, password } = req.body;
-    // Username can be email or username
-    // if either one is correct user can login
-    const user = await User.findOne({
-      where: {
-        [Op.or]: [{ email: username }, { username }]
-      }
-    });
-    if (password === user.password) {
+    const user = await findOnLogin(username);
+
+    if (user === null) {
+      res.status(400).send({ exception: "UserNotFoundException" });
+      return;
+    }
+    if (await argon.verify(user.password, password)) {
       const token = jwt.sign({ id: user.id }, "secret", {
         expiresIn: 86400
       });
-      res.status(200).send({ token, user });
+      const me = await findMe(user.id);
+
+      res.status(200).send({ token, user: me });
+    } else {
+      res.status(400).send({ exception: "NotAuthorizedException" });
     }
   } catch (error) {
-    res.status(400).send(error);
-  }
-}
-
-export async function logout(req, res, next) {
-  try {
-    const token = req.headers.authorization;
-    const decoded = jwt.verify(token, "secret");
-    const user = await User.findById(decoded.id);
-    res.status(200).send(user);
-  } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send({ exception: "general", error });
   }
 }
