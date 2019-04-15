@@ -17,19 +17,16 @@
   },
   "homepage": "https://github.com/malcodeman/polaroid-server#readme",
   "devDependencies": {
-    "dotenv": "^6.2.0",
+    "dotenv": "^7.0.0",
     "nodemon": "^1.17.3"
   },
   "dependencies": {
-    "argon2": "^0.19.3",
+    "argon2": "^0.21.0",
     "cors": "^2.8.4",
     "esm": "^3.0.84",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.2.1",
     "pg": "^7.4.3",
-    "sequelize": "^4.37.7"
-  },
-  "engines": {
-    "node": "8.11.1"
+    "sequelize": "^5.4.0"
   }
 }
