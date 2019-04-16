@@ -13,7 +13,7 @@ Polaroid server is simple RESTful API that enable users to create and share cont
 .env file should look like this:
 
 ```
-DB_URL = postgres://root:toor@localhost/polaroid
+DB_URL = mysql://root:toor@localhost/polaroid
 ```
 
 To start the service run:

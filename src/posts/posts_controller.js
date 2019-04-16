@@ -3,6 +3,9 @@ import Comment from "../comments/comments_model";
 import User from "../users/users_model";
 import Like from "../likes/likes_model";
 import Bookmark from "../bookmarks/bookmarks_model";
+import likes_helpers from "../likes/likes_helpers";
+import bookmarks_helpers from "../bookmarks/bookmarks_helpers";
+import comments_helpers from "../comments/comments_helpers";
 
 export async function create(req, res, next) {
   try {
@@ -88,6 +91,72 @@ export async function findAll(req, res, next) {
       post.dataValues.likesCount = await likesCount(post.dataValues.id);
     }
     res.status(200).send(posts);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+}
+
+export async function like(req, res, next) {
+  try {
+    const { id } = req.params;
+    const like = await likes_helpers.createLike(Number(id), req.userId);
+
+    res.status(200).send(like);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+}
+
+export async function dislike(req, res, next) {
+  try {
+    const { id } = req.params;
+    const like = await likes_helpers.destroyLike(Number(id), req.userId);
+
+    res.status(200).send(like);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+}
+
+export async function saveBookmark(req, res, next) {
+  try {
+    const { id } = req.params;
+    const bookmark = await bookmarks_helpers.createBookmark(
+      Number(id),
+      req.userId
+    );
+
+    res.status(200).send(bookmark);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+}
+
+export async function removeBookmark(req, res, next) {
+  try {
+    const { id } = req.params;
+    const bookmark = await bookmarks_helpers.destroyBookmark(
+      Number(id),
+      req.userId
+    );
+
+    res.status(200).send(bookmark);
+  } catch (error) {
+    console.log("er\n\n", error);
+    res.status(400).send(error);
+  }
+}
+
+export async function addComment(req, res, next) {
+  try {
+    const { postId, body } = req.body;
+    const comment = await comments_helpers.createComment(
+      postId,
+      req.userId,
+      body
+    );
+
+    res.status(200).send(comment);
   } catch (error) {
     res.status(400).send(error);
   }
