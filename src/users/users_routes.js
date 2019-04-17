@@ -1,12 +1,19 @@
 import express from "express";
 
-import { findByUsername, findAll, findMe, updateMe } from "./users_controller";
+import {
+  findMe,
+  updateName,
+  updateEmail,
+  findByUsername,
+  findAll
+} from "./users_controller";
 import { requireAuthentication } from "../auth/auth_middleware";
 
 const router = express.Router();
 
 router.get("/me", requireAuthentication, findMe);
-router.put("/me", requireAuthentication, updateMe);
+router.put("/me/name", requireAuthentication, updateName);
+router.put("/me/email", requireAuthentication, updateEmail);
 router.get("/:username", findByUsername);
 router.get("/", requireAuthentication, findAll);
 

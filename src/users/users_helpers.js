@@ -6,7 +6,7 @@ import Bookmark from "../bookmarks/bookmarks_model";
 
 export async function create(email, name, username, password) {
   try {
-    const nameFirstLetter = name[0];
+    const nameFirstLetter = name[0].toLowerCase();
     const user = await User.create({
       email,
       name,

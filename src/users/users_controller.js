@@ -1,3 +1,5 @@
+import argon from "argon2";
+
 import User from "./users_model";
 import Post from "../posts/posts_model";
 import Bookmark from "../bookmarks/bookmarks_model";
@@ -56,20 +58,35 @@ export async function findMe(req, res, next) {
   }
 }
 
-export async function updateMe(req, res, next) {
+export async function updateName(req, res, next) {
   try {
-    const id = req.userId;
-    const fields = ["email", "name", "username", "profilePhotoURL"];
-    let dataToUpdate = {};
-    fields.forEach(field => {
-      if (req.body.hasOwnProperty(field)) {
-        dataToUpdate[field] = req.body[field];
-      }
-    });
-    const me = await findById(id);
+    const { name } = req.body;
+    const nameFirstLetter = name[0].toLowerCase();
 
-    me.update(dataToUpdate, { fields });
-    res.status(200).send(me);
+    await User.update({ name, nameFirstLetter }, { where: { id: req.userId } });
+    res.status(200).send({ name: name, nameFirstLetter: nameFirstLetter });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+}
+
+export async function updateEmail(req, res, next) {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({
+      where: {
+        id: req.userId
+      },
+      attributes: ["password"]
+    });
+
+    if (await argon.verify(user.password, password)) {
+      await User.update({ email }, { where: { id: req.userId } });
+
+      res.status(200).send({ email: email });
+    } else {
+      res.status(400).send({ exception: "NotAuthorizedException" });
+    }
   } catch (error) {
     res.status(400).send(error);
   }
