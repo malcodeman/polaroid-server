@@ -91,3 +91,26 @@ export async function updateEmail(req, res, next) {
     res.status(400).send(error);
   }
 }
+
+export async function updatePassword(req, res, next) {
+  try {
+    const { newPassword, currentPassword } = req.body;
+    const user = await User.findOne({
+      where: {
+        id: req.userId
+      },
+      attributes: ["password"]
+    });
+
+    if (await argon.verify(user.password, currentPassword)) {
+      const password = await argon.hash(newPassword);
+
+      await User.update({ password }, { where: { id: req.userId } });
+      res.status(200).send({ success: true });
+    } else {
+      res.status(400).send({ exception: "NotAuthorizedException" });
+    }
+  } catch (error) {
+    res.status(400).send(error);
+  }
+}
