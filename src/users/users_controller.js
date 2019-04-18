@@ -1,4 +1,6 @@
 import argon from "argon2";
+import axios from "axios";
+import url from "url";
 
 import User from "./users_model";
 import Post from "../posts/posts_model";
@@ -110,6 +112,35 @@ export async function updatePassword(req, res, next) {
     } else {
       res.status(400).send({ exception: "NotAuthorizedException" });
     }
+  } catch (error) {
+    res.status(400).send(error);
+  }
+}
+
+export async function updateProfilePhotoURL(req, res, next) {
+  try {
+    const { profilePhotoURL } = req.body;
+    const parsedUrl = url.parse(profilePhotoURL);
+    const hostname = parsedUrl.hostname;
+
+    // Checks if URL is live
+    if (hostname) {
+      const resp = await axios.get(profilePhotoURL);
+      const contentType = resp.headers["content-type"];
+      const contentLength = resp.headers["content-length"];
+
+      // 3 MB
+      if (contentLength >= 3000000) {
+        res.status(400).send({ exception: "FileTooBig" });
+        return;
+      }
+      if (contentType === "image/jpeg") {
+        await User.update({ profilePhotoURL }, { where: { id: req.userId } });
+        res.status(200).send({ profilePhotoURL });
+        return;
+      }
+    }
+    res.status(400).send({ exception: "InvalidUrl" });
   } catch (error) {
     res.status(400).send(error);
   }
