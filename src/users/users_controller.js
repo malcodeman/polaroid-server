@@ -1,11 +1,13 @@
 import argon from "argon2";
 import axios from "axios";
 import url from "url";
+import { Op } from "sequelize";
 
 import User from "./users_model";
 import Post from "../posts/posts_model";
 import Bookmark from "../bookmarks/bookmarks_model";
 import helpers from "./users_helpers";
+import sequelize from "../connection";
 
 export async function findByUsername(req, res, next) {
   try {
@@ -30,6 +32,26 @@ export async function findByUsername(req, res, next) {
       return;
     }
     res.status(200).send(user);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+}
+
+export async function findSuggestions(req, res, next) {
+  try {
+    const Operator = Op;
+    const suggestions = await User.findAll({
+      order: sequelize.literal("rand()"),
+      limit: 3,
+      attributes: ["username", "nameFirstLetter", "profilePhotoURL"],
+      where: {
+        id: {
+          [Operator.not]: req.userId
+        }
+      }
+    });
+
+    res.status(200).send(suggestions);
   } catch (error) {
     res.status(400).send(error);
   }
