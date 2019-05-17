@@ -58,7 +58,8 @@ export async function findMe(id) {
             }
           ]
         }
-      ]
+      ],
+      order: [[Bookmark, "createdAt", "DESC"]]
     });
 
     return me;
