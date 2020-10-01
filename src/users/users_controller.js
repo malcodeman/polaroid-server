@@ -14,17 +14,17 @@ export async function findByUsername(req, res, next) {
     const { username } = req.params;
     const user = await User.findOne({
       where: {
-        username
+        username,
       },
       attributes: {
-        exclude: ["email", "password"]
+        exclude: ["email", "password"],
       },
       include: [
         {
-          model: Post
-        }
+          model: Post,
+        },
       ],
-      order: [[Post, "createdAt", "DESC"]]
+      order: [[Post, "createdAt", "DESC"]],
     });
 
     if (user === null) {
@@ -41,14 +41,14 @@ export async function findSuggestions(req, res, next) {
   try {
     const Operator = Op;
     const suggestions = await User.findAll({
-      order: sequelize.literal("rand()"),
+      order: sequelize.literal("random()"),
       limit: 3,
       attributes: ["username", "nameFirstLetter", "profilePhotoURL"],
       where: {
         id: {
-          [Operator.not]: req.userId
-        }
-      }
+          [Operator.not]: req.userId,
+        },
+      },
     });
 
     res.status(200).send(suggestions);
@@ -61,8 +61,8 @@ export async function findAll(req, res, next) {
   try {
     const users = await User.findAll({
       attributes: {
-        exclude: ["email", "password", "updatedAt"]
-      }
+        exclude: ["email", "password", "updatedAt"],
+      },
     });
 
     res.status(200).send(users);
@@ -99,9 +99,9 @@ export async function updateEmail(req, res, next) {
     const { email, password } = req.body;
     const user = await User.findOne({
       where: {
-        id: req.userId
+        id: req.userId,
       },
-      attributes: ["password"]
+      attributes: ["password"],
     });
 
     if (await argon.verify(user.password, password)) {
@@ -121,9 +121,9 @@ export async function updatePassword(req, res, next) {
     const { newPassword, currentPassword } = req.body;
     const user = await User.findOne({
       where: {
-        id: req.userId
+        id: req.userId,
       },
-      attributes: ["password"]
+      attributes: ["password"],
     });
 
     if (await argon.verify(user.password, currentPassword)) {
